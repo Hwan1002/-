@@ -1,0 +1,66 @@
+header{
+  font-size: 3rem;
+  height: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7rem;
+  background: #1b1b1b;
+  width: 100%;
+  position: fixed;
+}
+
+main{
+	padding-top: 13rem;
+}
+
+nav ul{
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5rem;
+}
+
+nav li {
+  padding: 1.2rem;
+  border-radius: 2rem;
+  cursor: pointer;
+}
+
+.inputBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+#result{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 5rem;
+  column-gap: 6rem;
+  justify-items: center;
+  align-items: center;
+  text-align: center;
+}
+
+#inputSearch {
+  cursor: pointer;
+}
+
+footer{
+  height: 20rem;
+  align-content: center;
+  text-align: center;
+}
+
+@media screen and (min-width:1200px) {
+  #result{
+    padding-left: 20rem;
+    padding-right: 20rem;
+  }
+}
+
+
