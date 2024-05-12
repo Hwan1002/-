@@ -61,7 +61,9 @@ function Movie () {
       fetchData()
     },
     onFavoriteClick: (imdbID) => {
-      const tabGubun = this.state.tabButton === 'search' ? this.state.result : this.state.favorites
+      const {result, favorites, tabButton} = this.state
+
+      const tabGubun = tabButton === 'search' ? result : favorites
       const favoriteIndex = tabGubun.findIndex(movie => movie.imdbID === imdbID)
       const nextResult = [...tabGubun]
       const favoriteResult = nextResult[favoriteIndex].favorite
@@ -69,16 +71,16 @@ function Movie () {
       nextResult[favoriteIndex].favorite = !favoriteResult;
       let newFavorites = [];
       if(!favoriteResult){
-        const checkFirstFavorites = this.state.favorites.length === 0 ? 
+        const checkFirstFavorites = favorites.length === 0 ? 
           [nextResult[favoriteIndex]] : 
-          [...this.state.favorites, nextResult[favoriteIndex]]
+          [...favorites, nextResult[favoriteIndex]]
 
         newFavorites = checkFirstFavorites
-        if(this.state.favorites.length > 0) removeItem('favorites')
+        if(favorites.length > 0) removeItem('favorites')
         setItem('favorites', newFavorites)
       }else{
         removeItem('favorites')
-        newFavorites = this.state.favorites.filter(movie => movie.imdbID !== imdbID)
+        newFavorites = favorites.filter(movie => movie.imdbID !== imdbID)
         setItem('favorites', newFavorites)
       }
 
@@ -99,22 +101,24 @@ function Movie () {
   const $inputValue = document.getElementById('inputValue')
 
   const fetchData = async(firstPage = false) => {
+
+    const {result, totalCount, tabButton, inputValue, page} = this.state
     
     searchResult.setState({
-      result: this.state.result,
-      totalCount: this.state.totalCount,
+      result: result,
+      totalCount: totalCount,
       isLoading: true,
     })
 
-    if(this.state.tabButton === 'favorite'){
+    if(tabButton === 'favorite'){
       searchResult.setState({
         ...searchResult.state,
-        result: searchResult.state.result.filter( movie => movie.Title === this.state.inputValue)
+        result: searchResult.state.result.filter( movie => movie.Title === inputValue)
       })
     }
 
-    const page = firstPage ? 1 : this.state.page
-    const resultData = await request(this.state.inputValue, this.state.page);
+    const checkPage = firstPage ? 1 : page
+    const resultData = await request(inputValue, page);
 
     if(resultData.Response === 'True' && 'Search' in resultData){
       if(firstPage) window.scrollTo(0, 0)
@@ -123,22 +127,22 @@ function Movie () {
         item.favorite = false;
       })
 
-      const nextData = page === 1 ? 
+      const nextData = checkPage === 1 ? 
         resultData.Search : 
-        [...this.state.result, ...resultData.Search]
+        [...result, ...resultData.Search]
 
       this.setState({
         ...this.state,
         isLoading: false,
         result: nextData,
         totalCount: resultData.totalResults,
-        page: firstPage ? 1 : this.state.page + 1
+        page: firstPage ? 1 : page + 1
       })
 
       searchResult.setState({
         result: nextData,
         totalCount: resultData.totalResults,
-        tabButton: this.state.tabButton,
+        tabButton: tabButton,
         isLoading: false,
       })
     }else{

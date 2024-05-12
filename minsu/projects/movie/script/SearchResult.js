@@ -19,7 +19,6 @@ export default function SearchResult({initialState, onScrollEnded, onFavoriteCli
   this.setState = nextState => {
     this.state = nextState
 
-    console.log(nextState)
     this.render()
   }
 
@@ -48,17 +47,19 @@ export default function SearchResult({initialState, onScrollEnded, onFavoriteCli
 
   this.render = () => {
 
+    const {totalCount, isLoading, result, tabButton} = this.state
+
     $loading.innerText = 
-      this.state.totalCount > 0 && this.state.isLoading ?
+    totalCount > 0 && isLoading ?
         'Loading...' : ''
 
-    if(this.state.totalCount > 0 && 
-      this.state.result.length === this.state.totalCount){
+    if(totalCount > 0 && 
+      result.length === totalCount){
       $endLabel.innerHTML = '마지막 데이터 입니다.'
     }
 
-    if((this.state.tabButton === 'search' && this.state.totalCount === 0 && !this.state.isLoading)
-      || this.state.tabButton === 'favorite' && getItem('totalCount', 0) === 0 && !this.state.isLoading
+    if((tabButton === 'search' && totalCount === 0 && !isLoading)
+      || tabButton === 'favorite' && getItem('totalCount', 0) === 0 && !isLoading
     ){
       $result.style.display = 'block'
       $result.innerHTML = `검색 결과가 없습니다.`
@@ -67,7 +68,7 @@ export default function SearchResult({initialState, onScrollEnded, onFavoriteCli
 
     $result.style.display = 'grid'
     $result.innerHTML = `
-      ${this.state.result.map(({Title, Year, imdbID, Type, Poster, favorite}) => `
+      ${result.map(({Title, Year, imdbID, Type, Poster, favorite}) => `
         <section class='poster' data-id=${imdbID}>
           <div class='posterBlur'></div>
           <div class='favoriteButton'>
