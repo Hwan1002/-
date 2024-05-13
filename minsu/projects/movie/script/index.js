@@ -63,36 +63,32 @@ function Movie () {
     onFavoriteClick: (imdbID) => {
       const {result, favorites, tabButton} = this.state
 
-      const tabGubun = tabButton === 'search' ? result : favorites
-      const favoriteIndex = tabGubun.findIndex(movie => movie.imdbID === imdbID)
-      const nextResult = [...tabGubun]
-      const favoriteResult = nextResult[favoriteIndex].favorite
+      const resultIndex = result.findIndex(movie => movie.imdbID === imdbID)
+      const favoriteIndex = favorites.findIndex(movie => movie.imdbID === imdbID)
 
-      nextResult[favoriteIndex].favorite = !favoriteResult;
-      let newFavorites = [];
-      if(!favoriteResult){
-        const checkFirstFavorites = favorites.length === 0 ? 
-          [nextResult[favoriteIndex]] : 
-          [...favorites, nextResult[favoriteIndex]]
-
-        newFavorites = checkFirstFavorites
-        if(favorites.length > 0) removeItem('favorites')
-        setItem('favorites', newFavorites)
-      }else{
-        removeItem('favorites')
-        newFavorites = favorites.filter(movie => movie.imdbID !== imdbID)
-        setItem('favorites', newFavorites)
+      let saveResult;
+      if (favoriteIndex >= 0) {
+        saveResult = favorites.filter(movie => movie.imdbID !== imdbID);
+      } else {
+        const updatedMovie = { ...result[resultIndex], favorite: !result[resultIndex].favorite };
+        saveResult = [...favorites, updatedMovie];
       }
 
-      setItem('totalCount', newFavorites.length)
+      setItem('favorites', saveResult)
+      setItem('totalCount', saveResult.length)
+
+      const nextResult = [...result]
+      if(result.length > 0) nextResult[resultIndex].favorite = !result[resultIndex].favorite
+
       this.setState({
         ...this.state,
-        favorites: newFavorites,
+        result: nextResult,
+        favorites: saveResult,
       })
 
       searchResult.setState({
         ...searchResult.state,
-        result: nextResult
+        result: tabButton === 'search' ? nextResult : saveResult
       })
     },
     tabButton: this.state.tabButton
@@ -102,11 +98,10 @@ function Movie () {
 
   const fetchData = async(firstPage = false) => {
 
-    const {result, totalCount, tabButton, inputValue, page} = this.state
+    const {result, totalCount, tabButton, inputValue, page, favorites} = this.state
     
     searchResult.setState({
-      result: result,
-      totalCount: totalCount,
+      ...searchResult.state,
       isLoading: true,
     })
 
@@ -125,6 +120,8 @@ function Movie () {
 
       resultData.Search.forEach(item => {
         item.favorite = false;
+        const isFavorite = favorites.some(favorite => favorite.imdbID === item.imdbID);
+        if (isFavorite) item.favorite = true;
       })
 
       const nextData = checkPage === 1 ? 

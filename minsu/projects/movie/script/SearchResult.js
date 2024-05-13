@@ -53,11 +53,6 @@ export default function SearchResult({initialState, onScrollEnded, onFavoriteCli
     totalCount > 0 && isLoading ?
         'Loading...' : ''
 
-    if(totalCount > 0 && 
-      result.length === totalCount){
-      $endLabel.innerHTML = '마지막 데이터 입니다.'
-    }
-
     if((tabButton === 'search' && totalCount === 0 && !isLoading)
       || tabButton === 'favorite' && getItem('totalCount', 0) === 0 && !isLoading
     ){
