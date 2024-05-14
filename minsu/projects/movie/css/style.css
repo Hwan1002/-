@@ -1,13 +1,21 @@
+:root {
+  --primary-font: 'Lato', sans-serif;
+}
+
 header{
+  font-family: var(--primary-font);
   font-size: 3rem;
-  height: 10rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 7rem;
-  background: #1b1b1b;
+  background: linear-gradient(to bottom, black 0%, rgba(0, 0, 0, 0) 100%);
   width: 100%;
+  display: flex;
   position: fixed;
+  padding: 4rem;
+  align-items: center;
+}
+
+.logo{
+  margin-right: 2rem;
+  font-size: 4.5rem;
 }
 
 main{
@@ -15,25 +23,48 @@ main{
 }
 
 nav ul{
-  font-size: 2rem;
+  font-size: 2.2rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5rem;
 }
 
 nav li {
-  padding: 1.2rem;
-  border-radius: 2rem;
+  cursor: pointer;
+  font-weight: 400;
+  padding: 10px 16px;
+  border-radius: 3px;
+}
+
+nav li:hover{
+  background: #e50914;
   cursor: pointer;
 }
 
 .inputBar {
   display: flex;
+  position: absolute;
+  width: 100%;
   justify-content: center;
-  align-items: center;
-  padding-top: 5rem;
-  padding-bottom: 5rem;
+  pointer-events: none;
+}
+
+#inputValue{
+  pointer-events: all;
+  width: 20%;
+  background: transparent;
+  color: #ffffff;
+  outline: none;
+  border-radius: 37px;
+  padding: 0 10px;
+  height: 3.5rem;
+  border: 2px solid rgba(245, 245, 241, 0.1);
+  transition: border 0.25s ease, width 0.125s ease 0.125s;
+}
+
+#inputValue:focus {
+  border: 2px solid #e50914;
+  width: 30%;
 }
 
 #result{
@@ -45,7 +76,6 @@ nav li {
   align-items: center;
   text-align: center;
 }
-
 
 .poster{
   width: 40rem;
