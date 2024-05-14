@@ -1,4 +1,4 @@
-import {request} from './api.js'
+import {fetchData} from './api.js'
 import {setItem, getItem, removeItem} from './storage.js'
 import TapButton from './TabButton.js'
 import SearchResult from './SearchResult.js'
@@ -10,31 +10,19 @@ function Movie () {
     inputValue: '',
     result: [],
     page: 1,
-    totalCount: 0,
-    isLoading: false,
-    favorites: []
+    totalCount: getItem('totalCount', 0),
+    favorites: getItem('favorites', [])
   }
 
   this.setState = nextState => {
     this.state = nextState
   }
 
-  this.setState({
-    ...this.state,
-    favorites: getItem('favorites', '') === '' ? [] : getItem('favorites', ''),
-    totalCount: getItem('totalCount', 0) === 0 ? 0 : getItem('totalCount', 0),
-  })
-
   new TapButton({
     initialState: this.state.tabButton, 
     onClick: (tagName) => {
-      let searchList = [];
-
-      if(tagName === 'search'){
-        searchList = this.state.result
-      }else{
-        searchList = this.state.favorites
-      }
+      const { result, favorites } = this.state
+      const searchList = tagName === 'search' ? result : favorites
 
       this.setState({
         ...this.state,
@@ -58,7 +46,7 @@ function Movie () {
       isLoading: false
     },
     onScrollEnded: () => {
-      fetchData()
+      fetchData(this, searchResult)
     },
     onFavoriteClick: (imdbID) => {
       const {result, favorites, tabButton} = this.state
@@ -94,88 +82,22 @@ function Movie () {
     tabButton: this.state.tabButton
   })
 
-  const $inputValue = document.getElementById('inputValue')
-
-  const fetchData = async(firstPage = false) => {
-
-    const {result, totalCount, tabButton, inputValue, page, favorites} = this.state
-    
-    searchResult.setState({
-      ...searchResult.state,
-      isLoading: true,
-    })
-
-    if(tabButton === 'favorite'){
-      searchResult.setState({
-        ...searchResult.state,
-        result: searchResult.state.result.filter( movie => movie.Title === inputValue)
-      })
-    }
-
-    const checkPage = firstPage ? 1 : page
-    const resultData = await request(inputValue, page);
-
-    if(resultData.Response === 'True' && 'Search' in resultData){
-      if(firstPage) window.scrollTo(0, 0)
-
-      resultData.Search.forEach(item => {
-        item.favorite = false;
-        const isFavorite = favorites.some(favorite => favorite.imdbID === item.imdbID);
-        if (isFavorite) item.favorite = true;
-      })
-
-      const nextData = checkPage === 1 ? 
-        resultData.Search : 
-        [...result, ...resultData.Search]
-
-      this.setState({
-        ...this.state,
-        isLoading: false,
-        result: nextData,
-        totalCount: resultData.totalResults,
-        page: firstPage ? 1 : page + 1
-      })
-
-      searchResult.setState({
-        result: nextData,
-        totalCount: resultData.totalResults,
-        tabButton: tabButton,
-        isLoading: false,
-      })
-    }else{
-      this.setState({
-        ...this.state,
-        isLoading: false,
-        result: [],
-        totalCount: 0,
-        page: 1
-      })
-
-      searchResult.setState({
-        result: [],
-        totalCount: 0,
-        isLoading: false,
-      })
-    }
-  }
-
   new SearchHandler({
     setState: () =>{
       this.setState({
         ...this.state,
-        isLoading: true,
-        inputValue: $inputValue.value
+        page: 1,
+        inputValue: document.getElementById('inputValue').value
       })
     },
     resultSetState: () => {
       searchResult.setState({
-        result: this.state.result,
-        totalCount: this.state.totalCount,
+        ...searchResult.state,
         isLoading: true,
       })
     },
     fetchData: () => {
-      fetchData(true)
+      fetchData(this, searchResult, true)
     }
   })
 
