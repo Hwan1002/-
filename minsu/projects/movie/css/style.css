@@ -1,0 +1,115 @@
+header{
+  font-size: 3rem;
+  height: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7rem;
+  background: #1b1b1b;
+  width: 100%;
+  position: fixed;
+}
+
+main{
+	padding-top: 13rem;
+}
+
+nav ul{
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5rem;
+}
+
+nav li {
+  padding: 1.2rem;
+  border-radius: 2rem;
+  cursor: pointer;
+}
+
+.inputBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+#result{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 5rem;
+  column-gap: 6rem;
+  justify-items: center;
+  align-items: center;
+  text-align: center;
+}
+
+
+.poster{
+  width: 40rem;
+  height: 40rem;
+  align-items: center;
+  position: relative;
+}
+
+.posterNotImage{
+  width: 100%; 
+  height: 100%; 
+  align-content: center; 
+  margin-left: auto; 
+  margin-right: auto; 
+  background: #2d2d2d;
+}
+
+.posterImage{
+  width: 100%; 
+  height: 100%; 
+  object-fit: contain; 
+  background: #2d2d2d;
+}
+
+.posterBlur{
+  position:absolute;
+  backdrop-filter: blur(0px);
+  width: 100%; 
+  height: 100%; 
+}
+
+/* cascading 때문에 자식요소를 hover 했을 때에도 작동이 되는건지? */
+.poster:hover > .posterBlur{
+  backdrop-filter: blur(10px);
+}
+
+.poster:hover > .favoriteButton{
+  display: block;
+}
+
+.favoriteButton{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: none;
+  align-content: center;  
+}
+
+.favoriteIcon{
+  width: 30%;
+  height: 30%;
+}
+
+footer{
+  height: 20rem;
+  align-content: center;
+  text-align: center;
+}
+
+@media screen and (min-width:1200px) {
+  #result{
+    padding-left: 20rem;
+    padding-right: 20rem;
+  }
+}
+
+

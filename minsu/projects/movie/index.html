@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>민플릭스</title>
+  <link href="./css/reset.css" rel="stylesheet" />
+  <link href="./css/style.css" rel="stylesheet" />
+</head>
+<body>
+  <header>
+    <div>
+      민<span style="color:red">플릭스</span>
+    </div>
+    <nav>
+      <ul>
+        <li id="search">검색</li>
+        <li id="favorite">즐겨찾기</li>
+      </ul>
+    </nav>
+    <div class="inputBar">
+      <input id="inputValue" autocomplete='off' />
+    </div>
+  </header>
+  <main>
+    <div id="result"></div>
+  </main>
+  <footer>
+    <div id="endLabel"></div>
+    <div id="loading"></div>
+  </footer>
+  <script defer type="module" src="./script/index.js"></script>
+</body>
+</html>
