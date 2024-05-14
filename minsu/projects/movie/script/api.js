@@ -35,6 +35,10 @@ export const fetchData = async(root, searchResult, firstPage = false) => {
     const checkPage = firstPage ? 1 : page
     const resultData = await request(inputValue, page);
   
+    let nextData = []
+    let nextCount = 0
+    let nextPage = 1
+
     if(resultData.Response === 'True' && 'Search' in resultData){
       if(firstPage) window.scrollTo(0, 0)
   
@@ -44,38 +48,25 @@ export const fetchData = async(root, searchResult, firstPage = false) => {
         if (isFavorite) item.favorite = true;
       })
   
-      const nextData = checkPage === 1 ? 
-        resultData.Search : 
-        [...result, ...resultData.Search]
-  
-      root.setState({
-        ...root.state,
-        result: nextData,
-        totalCount: resultData.totalResults,
-        page: firstPage ? 1 : page + 1
-      })
-  
-      searchResult.setState({
-        ...searchResult.state,
-        result: nextData,
-        totalCount: resultData.totalResults,
-        isLoading: false,
-      })
-    }else{
-      root.setState({
-        ...root.state,
-        result: [],
-        totalCount: 0,
-        page: 1
-      })
-  
-      searchResult.setState({
-        ...searchResult.state,
-        result: [],
-        totalCount: 0,
-        isLoading: false,
-      })
+      nextData = checkPage === 1 ? resultData.Search : [...result, ...resultData.Search]
+      nextCount = resultData.totalResults;
+      nextPage = firstPage ? 1 : page + 1
     }
+
+    root.setState({
+      ...root.state,
+      result: nextData,
+      totalCount: nextCount,
+      page: nextPage
+    })
+
+    searchResult.setState({
+      ...searchResult.state,
+      result: nextData,
+      totalCount: nextCount,
+      isLoading: false,
+    })
+
   }
 
 }
