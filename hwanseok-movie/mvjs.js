@@ -1,6 +1,5 @@
 (() => {
     console.log("DOM start script");
-  
     /**
      * @description Element 스타일 핸들러
      * @return {void}
@@ -24,101 +23,189 @@
     initStyle();
   })();
   
+//현재상태값 저장
+this.state = {
+  nowPage: 1,
+  inputValue: '',
+  searchResult: [],
+  totalPage : 0,
+  isProcessing: false,
+}
+/**
+ * @description API 연동 
+ */
+
+
+
+ const starClicked = () => {
+  const titlename1 = document.querySelector(".title");
+  const titlename2 = document.getElementById("title");
+
+  const typename = document.querySelectorAll("#type");
+  console.log(titlename1);
+  console.log(titlename2.value);
+  console.log(typename.value);
+
+}
+ 
+
+
+/**
+ * @description 디브 자동 생성 함수
+ */
+function createMvDiv(){
+
+  console.log("start create");
+
+  
+  for(const [index, data] of Object.entries(this.state.searchResult)){
+    //mvcontent div영역
+    const divNodeDummy = document.createElement('div');
+    divNodeDummy.classList.add('mvContent');
+    
+    //위에 안에 있는 mvImage div 영역
+    const divImgNode = document.createElement('div');
+    divImgNode.classList.add('mvImage');
+    
+    //img 태그 
+    const imgNode = document.createElement('img');
+    imgNode.src=data['Poster'];
+    imgNode.onerror=this.src='img/pic_error.png';
+    
+    // imgNode.onerror=this.src='img/pic_error.png';
+    //mvTitle 영역
+    const divTitle = document.createElement('div');
+    divTitle.classList.add('mvTitle');
+    const spanNode = document.createElement('span');
+    const titleP = document.createElement('p');
+    titleP.classList.add("title");
+    titleP.id="title";
+    titleP.innerText=data["Title"];
+    const typeP = document.createElement('p');
+    typeP.id="type";
+    typeP.innerText=data["Type"];
+    const btn = document.createElement("button");
+    btn.classList.add("btn");
+    btn.type="button";
+    // btn.onclick= starClicked;
+    btn.innerText="LOVE IT!";
+    btn.onclick=starClicked;
+    
+    divTitle.appendChild(spanNode);
+    spanNode.appendChild(titleP);
+    spanNode.appendChild(typeP);
+    spanNode.appendChild(btn);
+
+    // spanNode.appendChild(button);
+    divImgNode.appendChild(imgNode);
+    divNodeDummy.appendChild(divImgNode);
+    divNodeDummy.appendChild(divTitle);
+
+    document.querySelector('.movies').appendChild(divNodeDummy);
+
+    // function favorClicked(){
+    //   console.log("아이조아");
+    // } 
+    
+    // 자 생각을해보자 버튼을 클릭했을때 거기에 있는 타이틀과 타입의 값을 가져와야해 
+    
+    
+    
+  }
+}
   /**
-   * @description search 버튼 클릭 이벤트 핸들러.
+   * @description 즐겨찾기 버튼 
    */
-  const onSearch = async () => {
-    try {
-        const s = document.getElementById("searchKey").value;
-        const url = `https://www.omdbapi.com/?i=tt3896198&apikey=9172b236&s=${s}`;
 
-        const response = await fetch(url);
-        const result = await response.json();
-        const totalResult = result.totalResults;
-        const totalPage = Math.ceil(totalResult/10); 
-        
-        //iron man 검색했을경우 반올림 13 페이지 까지 나와야함
-        
-        for(const [index, data] of Object.entries(result.Search)){
-            //mvcontent div영역
-            const divNodeDummy = document.createElement('div');
-            divNodeDummy.classList.add('mvContent');
-            
-            //위에 안에 있는 mvImage div 영역
-            const divImgNode = document.createElement('div');
-            divImgNode.classList.add('mvImage');
-            
-            //img 태그 
-            const imgNode = document.createElement('img');
-            imgNode.src=data['Poster'];
-            
-            //mvTitle 영역
-            const divTitle = document.createElement('div');
-            divTitle.classList.add('mvTitle');
-            const spanNode = document.createElement('span');
-            spanNode.innerHTML = `<p class="p1" value="Good Times">${data["Title"]}</p><p class="p2">${data["Type"]}</p>`;
+/**
+ * @description api fetch 
+ */    
 
-            divTitle.appendChild(spanNode);
-            divImgNode.appendChild(imgNode);
-            divNodeDummy.appendChild(divImgNode);
-            divNodeDummy.appendChild(divTitle);
+/**
+ * @description search 버튼 클릭 이벤트 핸들러.
+ */
+const onSearch = async () => {
+  try { 
+      const s = document.getElementById("searchKey").value;
+      const url = `https://www.omdbapi.com/?i=tt3896198&apikey=9172b236&s=${s}`;
+      const response = await fetch(url);
+      const result = await response.json();
+      const totalResult = result.totalResults;
+      const totalPage = Math.ceil(totalResult/10);
 
-            document.querySelector('.movies').appendChild(divNodeDummy);
-        }
-            
-        window.onscroll = async function(){
-            if((window.innerHeight + scrollY) >= document.body.offsetHeight){
-                for(let i=0; i<=totalPage; i++){
-                    debugger;
-                    const url = `https://www.omdbapi.com/?i=tt3896198&apikey=9172b236&s=${s}&page=${i}`;
-                    const response = await fetch(url);
-                    const result = await response.json();
+      
+      this.state.inputValue += s;
+      this.state.totalPage += totalPage;
+      this.state.searchResult = result.Search;
+      
+      createMvDiv();
 
-                    for(const [index, data] of Object.entries(result.Search)){
-                        //mvcontent div영역
-                        const divNodeDummy = document.createElement('div');
-                        divNodeDummy.classList.add('mvContent');
-                        
-                        //위에 안에 있는 mvImage div 영역
-                        const divImgNode = document.createElement('div');
-                        divImgNode.classList.add('mvImage');
-                        
-                        //img 태그 
-                        const imgNode = document.createElement('img');
-                        imgNode.src=data['Poster'];
-                        
-                        //mvTitle 영역
-                        const divTitle = document.createElement('div');
-                        divTitle.classList.add('mvTitle');
-                        const spanNode = document.createElement('span');
-                        spanNode.innerHTML = `<p class="p1" value="Good Times">${data["Title"]}</p><p class="p2">${data["Type"]}</p>`;
-    
-                        divTitle.appendChild(spanNode);
-                        divImgNode.appendChild(imgNode);
-                        divNodeDummy.appendChild(divImgNode);
-                        divNodeDummy.appendChild(divTitle);
-    
-                        document.querySelector('.movies').appendChild(divNodeDummy);
-                    }
-                }       
-                
-            }
-        }
+  } catch (error) {
+      console.log('에러 원인 : ' + error);
+    const err = document.createElement('p');
+    err.className = 'errMsg';
+    err.innerText = '검색 결과가 없습니다.';
+    document.querySelector('.movies').appendChild(err);
+  }
+};
 
-    } catch (error) {
-        console.log('에러 원인 : ' + error);
-      const err = document.createElement('p');
-      err.className = 'errMsg';
-      err.innerText = '검색 결과가 없습니다.';
-      document.querySelector('.movies').appendChild(err);
+//debounce 사용해서 scroll 마다 실행되는거 막기
+//debounce 함수 만들기 
+const debounce = (callback, delay = 120) => {
+  let timer;
+  return (e) => {
+    if (timer) {
+      clearTimeout(timer);
     }
-    
+    timer = setTimeout(() => {
+      callback(e);
+    }, delay);
   };
+};
+  window.addEventListener('scroll', debounce(scrolBouce));
+  
+function scrolBouce(){
+  console.log(window.scrollY,window.innerHeight);
+  console.log(this.state.isProcessing);
+
+  const isScrollEnded = window.scrollY + window.innerHeight + 100 >= document.body.scrollHeight;
+
+  if (isScrollEnded && !this.state.isProcessing) {
+
+    this.state.isProcessing = true;
+
+    const scrollFetch = async () => {
+      try{
+            const url = `https://www.omdbapi.com/?i=tt3896198&apikey=9172b236&s=${this.state.inputValue}&page=${this.state.nowPage += 1}`;
+            console.log(url);
+            const response = await fetch(url);
+            const result = await response.json();
+            this.state.searchResult = result.Search;
+            createMvDiv();
+          }
+      catch(error){
+          console.log('에러 원인 : ' + error);
+          const err = document.createElement('p');
+          err.className = 'errMsg';
+          err.innerText = '검색 결과가 없습니다.';
+          document.querySelector('.movies').appendChild(err);
+          }
+        finally{this.state.isProcessing=false;}
+      }
+       scrollFetch(); 
+    }
+  };
+
+
+
+
   
   
+ 
+  
+    
 
-
-
+ 
   //데이터 가져오는 api
   // const searchBtn = document.getElementById("searchBtn");
   
@@ -167,23 +254,4 @@
   //             return result;
   //     }
   // });
-  
-  ////////////////////////////////////////////////////////////////////
-  //fetch 로 api 연동
-  // searchBtn.addEventListener("click", async function logMovies(){
-  //     const s = document.getElementById("searchKey").value;
-  //     const url = `https://www.omdbapi.com/?i=tt3896198&apikey=9172b236&s=${s}`;
-  //     const api = await fetch(url)
-  //     .then((response) => response.json())
-  //     .catch((error) => console.log(error));
-  //     const result = response.json();
-  //     debugger;
-  //     console.log(result);
-  //     console.log("welcome html");
-  // });
-  
-  ////////////////////////////////////////////////////////////////////
-  // 포스터 api 요청
-  // api로 영화 포스터랑 내용값 뿌려주기
-  // 검색값이랑 가지고 있는 영화 이름들을 비교 조회후에 맞는걸 보여주기
   
