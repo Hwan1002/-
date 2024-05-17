@@ -65,7 +65,7 @@ export default function SearchResult({initialState, onScrollEnded, onFavoriteCli
     $result.innerHTML = `
       ${result.map(({Title, Year, imdbID, Type, Poster, favorite}) => `
         <section class='poster' data-id=${imdbID}>
-          <div class='posterBlur'></div>
+          <div class='posterZoom'></div>
           <div class='favoriteButton'>
             ${favoriteIcon(favorite)}
           </div>
