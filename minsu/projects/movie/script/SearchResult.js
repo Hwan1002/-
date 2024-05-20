@@ -65,7 +65,6 @@ export default function SearchResult({initialState, onScrollEnded, onFavoriteCli
     $result.innerHTML = `
       ${result.map(({Title, Year, imdbID, Type, Poster, favorite}) => `
         <section class='poster' data-id=${imdbID}>
-          <div class='posterZoom'></div>
           <div class='favoriteButton'>
             ${favoriteIcon(favorite)}
           </div>
@@ -74,8 +73,10 @@ export default function SearchResult({initialState, onScrollEnded, onFavoriteCli
               Image not found
             </div>`
             : `<img class='posterImage' src="${Poster}" />`}
-          <div>${Title}(${Year})</div>
-          <div>${Type}</div>
+          <div class='movieDescription'>
+            <div class='movieTitle'>${Title}</div>
+            <div class='movieType'>${Type} (${Year})</div>
+          </div>
         </section>
       `).join('')}
     `
