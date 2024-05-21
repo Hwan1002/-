@@ -27,27 +27,45 @@
 this.state = {
   nowPage: 1,
   inputValue: '',
-  searchResult: [],
+  searchResult: [], //여기로 받아와서 json stringigy 하면 어떨까 
   totalPage : 0,
   isProcessing: false,
+  index:0,
 }
 /**
  * @description API 연동 
  */
-
-
-
- const starClicked = () => {
-  const titlename1 = document.querySelector(".title");
-  const titlename2 = document.getElementById("title");
-
-  const typename = document.querySelectorAll("#type");
-  console.log(titlename1);
-  console.log(titlename2.value);
-  console.log(typename.value);
-
-}
+   function favorClicked(){
+     const movies = document.querySelector(".movies");
+     movies.classList.toggle("hide"); 
+     console.log("아이조아");
+     const favBtn = document.querySelector(".btn");
+    favBtn.classList.add("favorite");
+     const remove = document.querySelector(".favorite");
+     remove.innerText="remove";
+    } 
+    
+///러브잇 버튼을 누르면 클릭했던 영화 모든 정보를 가져와서 저장할수있게끔 해야함
+//저장을 한다치고 그 저장한값을 즐겨찾기 버튼을 눌렀을때 뿌려줘야함
+const starClicked = (event) => {
+  const btn = event.target;
+  const parentDiv = btn.closest('.mvContent');//window 안에 객체를 찾을때까지 돌려짐
+  const favor = document.querySelector(".favorites");
+  const clone = parentDiv.cloneNode(true); //cloneNode를 사용하여 위에 컨텐츠를 복사 
+  const storageTest = this.state.searchResult;
+  console.log(this.state.index);
+  console.log(storageTest[this.state.index]);
  
+  //같은 영화가  중복적으로 들어가는걸 막아야함
+  favor.appendChild(clone); // 이부분에 '만약 즐겨찾기 안에 없다면 insert 시켜주고 있다면 알럿 발생'
+  // if(즐겨찾기안에 같은게 없다면){
+  //   favor.appendChild(clone);
+  // }else{
+    // alert("이미 등록한 영화 입니다.");
+  //   return false;}
+  localStorage.setItem("favorites", clone); // storage에 string 형태로 넣어주고 값을 불러올때는 getitem 으로 parse 해서 가져와야함
+  
+}
 
 
 /**
@@ -57,9 +75,10 @@ function createMvDiv(){
 
   console.log("start create");
 
-  
   for(const [index, data] of Object.entries(this.state.searchResult)){
     //mvcontent div영역
+    debugger;
+    this.state.index = index.target; 
     const divNodeDummy = document.createElement('div');
     divNodeDummy.classList.add('mvContent');
     
@@ -87,9 +106,9 @@ function createMvDiv(){
     const btn = document.createElement("button");
     btn.classList.add("btn");
     btn.type="button";
-    // btn.onclick= starClicked;
-    btn.innerText="LOVE IT!";
     btn.onclick=starClicked;
+
+    btn.innerText="LOVE IT!";
     
     divTitle.appendChild(spanNode);
     spanNode.appendChild(titleP);
@@ -103,11 +122,7 @@ function createMvDiv(){
 
     document.querySelector('.movies').appendChild(divNodeDummy);
 
-    // function favorClicked(){
-    //   console.log("아이조아");
-    // } 
-    
-    // 자 생각을해보자 버튼을 클릭했을때 거기에 있는 타이틀과 타입의 값을 가져와야해 
+ 
     
     
     
@@ -116,7 +131,6 @@ function createMvDiv(){
   /**
    * @description 즐겨찾기 버튼 
    */
-
 /**
  * @description api fetch 
  */    
@@ -162,9 +176,9 @@ const debounce = (callback, delay = 120) => {
     }, delay);
   };
 };
-  window.addEventListener('scroll', debounce(scrolBouce));
+window.addEventListener('scroll', debounce(scrollBouce));
   
-function scrolBouce(){
+function scrollBouce(){
   console.log(window.scrollY,window.innerHeight);
   console.log(this.state.isProcessing);
 

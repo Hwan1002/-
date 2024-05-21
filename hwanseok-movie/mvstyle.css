@@ -75,7 +75,9 @@ body {
   text-align: center;
   padding-top: 30px;
 }
-
+.hide {
+  display: none;
+}
 .movies > p {
   color: #fff;
   font-size: 20px;
@@ -111,6 +113,7 @@ body {
 .mvTitle {
   position: absolute;
   width: 100%;
+  text-align: center;
   top: 50%;
   left: 50%;
   transition: 2s;
@@ -170,6 +173,11 @@ body {
 .btn:hover {
   color: gold;
   font-weight: bold;
+}
+
+/* 즐겨찾기 영역 */
+.favorites .mvTitle .btn ₩ {
+  content: "CANCEL";
 }
 
 /* const div = document.createElement("div");
