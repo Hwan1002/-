@@ -11,12 +11,8 @@ export default function TabButton({initialState, onClick}){
   const searchTab = document.getElementById('search')
   const favoriteTab = document.getElementById('favorite')
 
-  searchTab.style.background = initialState === 'search' ? '#2d2d2d' : '#1b1b1b';
-  favoriteTab.style.background = initialState === 'favorite' ? '#2d2d2d' : '#1b1b1b';
 
   const handleClick = (tabName) => {
-    searchTab.style.background = tabName === 'search' ? '#2d2d2d' : '#1b1b1b';
-    favoriteTab.style.background = tabName === 'favorite' ? '#2d2d2d' : '#1b1b1b';
     onClick(tabName);
   };
 

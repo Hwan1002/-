@@ -35,6 +35,8 @@ function Movie () {
         tabButton: tagName
       })
 
+      fetchData(this, searchResult)
+
     }
   })
 
