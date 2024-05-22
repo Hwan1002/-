@@ -50,7 +50,7 @@ const favor = document.querySelector(".favorites");
     console.log("에러 :" + error);
   }
  }
-
+ 
 //로컬 스토리지 데이터 가져오는 함수 & 뿌려주는 함수
 const getFavorite = () => {
   let getData = JSON.parse(localStorage.getItem("savedFavorite")); //getData 변수 안에 가져온 값들을 저장
@@ -91,11 +91,16 @@ const getFavorite = () => {
 
     document.querySelector('.favorites').appendChild(divNodeDummy);
   }
-    
 
+  
+const cancelClicked = (event) => {
+    window.localStorage.removeItem("savedFavorite");
+}  
 //메인에 있는 즐겨찾기 버튼을 눌렀을때 로컬스토리지에 저장한값(함수)을 뿌려주는 함수
 function favorClicked(){ 
   console.log("즐겨찾기 버튼");
+  getFavorite();
+
   const movies = document.querySelector(".movies");
   //토글로 클릭시 검색했던 결과 값을 안보이게 하고 즐겨찾기 내용들을 보여줌
   movies.classList.toggle("hide");
@@ -123,9 +128,7 @@ const loveClicked = (event) => {
     }
   })
 }
-const cancelClicked = (event) => {
-  window.localStorage.removeItem("savedFavorite");
-}
+
 
 /**
  * @description 디브 자동 생성 함수
